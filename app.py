@@ -72,7 +72,7 @@ encoded_user = quote_plus(POSTGRES_USER)
 
 # Create PostgreSQL connection string with encoded credentials
 postgres_url = f"postgresql://{encoded_user}:{encoded_password}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
-
+conn_st = st.connection(name="postgres", type='sql', url = postgres_url)
 # Set Groq API key in environment
 os.environ["GROQ_API_KEY"] = GROQ_API_KEY
 
@@ -86,7 +86,7 @@ if 'agent' not in st.session_state:
                 model="llama3-70b-8192",
                 temperature=0
             )
-            db = SQLDatabase.from_uri(postgres_url)
+            db = SQLDatabase.from_uri(conn_st)
             toolkit = SQLDatabaseToolkit(db=db, llm=llm)
             tools = toolkit.get_tools()
 
